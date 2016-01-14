@@ -11,7 +11,6 @@ class TimeSeriesChart extends EHChart {
     let self = this;
 
     function chart(selection) {
-      console.log('In the function that gets selection');
       selection.each(function (data) {
         self.draw(this, data);
       });
@@ -150,12 +149,10 @@ class ChartTimeSeries extends ChartControl {
   initChart() {
     let chart = new TimeSeriesChart();
 
-    console.log(chart);
     this.$chart = chart
       .x(function(d) { return formatDate.parse(d.date); })
       .y(function(d) { return +d.price; });
 
-    console.log(this.$chart);
     var formatDate = d3.time.format('%b %Y');
   }
 
