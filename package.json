@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "preversion": "npm test"
+    "preversion": "npm test",
+    "docker": "docker run -it -v \"${PWD}\":/usr/src/app --env-file=.env backplanejs"
   },
   "keywords": [],
   "author": "Mark Birbeck <mark.birbeck@gmail.com> (http://markbirbeck.com/)",
@@ -14,6 +15,7 @@
   "bugs": "https://github.com/markbirbeck/backplanejs/issues",
   "homepage": "https://github.com/markbirbeck/backplanejs",
   "dependencies": {
+    "d3": "^3.5.12",
     "webcomponents.js": "^0.7.18"
   },
   "devDependencies": {

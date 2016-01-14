@@ -1,5 +1,7 @@
 'use strict';
 
+let BackplaneControl = require('./backplane-control');
+
 /**
  * backplane-output
  *
@@ -7,21 +9,16 @@
  *  that is passed in via the refresh() method:
  */
 
-let template = `
-  <div class='container'>
-    <div class='value'></div>
-  </div>
-`;
+class BackplaneOutput extends BackplaneControl {
+  name() { return 'BackplaneOutput'; }
 
-class BackplaneOutput extends HTMLElement {
-  createdCallback() {
-    this.createShadowRoot().innerHTML = template;
-
-    this.$container = this.shadowRoot.querySelector('.container');
-    this.$value = this.shadowRoot.querySelector('.value');
-
-    this.refresh('');
-  };
+  markup() {
+    return `
+      <div class='container'>
+        <div class='value'></div>
+      </div>
+    `;
+  }
 
   refresh(value) {
     this.$value.innerHTML = value;
