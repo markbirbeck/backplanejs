@@ -9,17 +9,18 @@ class TimeSeriesChart extends EHChart {
     super(margin);
   };
 
-  draw(node, data) {
-    if (!Array.isArray(data)) {
-      return;
-    }
-
+  tidyData(data) {
     let self = this;
+
     // Convert data to standard representation greedily;
     // this is needed for nondeterministic accessors.
-    data = data.map(function(d, i) {
+    return data.map(function(d, i) {
       return [self.x.call(data, d, i), self.y.call(data, d, i)];
     });
+  };
+
+  draw(svg, data) {
+    let self = this;
 
     // Update the x-scale.
     this.xScale
@@ -31,9 +32,6 @@ class TimeSeriesChart extends EHChart {
         .domain([0, d3.max(data, function(d) { return d[1]; })])
         .range([this.height - this.margin.top - this.margin.bottom, 0]);
 
-    // Select the svg element, if it exists.
-    var svg = d3.select(node).selectAll('svg').data([data]);
-
     // Otherwise, create the skeletal chart.
     var gEnter = svg.enter().append('svg').append('g');
     gEnter.append('path').attr('class', 'area');
@@ -41,7 +39,7 @@ class TimeSeriesChart extends EHChart {
     gEnter.append('g').attr('class', 'x axis');
 
     // Update the outer dimensions.
-    svg .attr('width', this.width)
+    svg.attr('width', this.width)
         .attr('height', this.height);
 
     // Update the inner dimensions.

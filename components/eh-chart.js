@@ -1,5 +1,7 @@
 'use strict';
 
+let d3 = require('d3');
+
 class EHChart {
   constructor(margin) {
 
@@ -24,7 +26,30 @@ class EHChart {
     let self = this;
 
     selection.each(function (data) {
-      self.draw(this, data);
+      if (!Array.isArray(data)) {
+        return;
+      }
+
+      /**
+       * If there is a data tidying function then call it:
+       */
+
+      let tidyData = (self.tidyData) ? self.tidyData(data) : data;
+
+      /**
+       * Select the SVG element, if it exists:
+       */
+
+      var svg = d3
+      .select(this)
+      .selectAll('svg')
+      .data([tidyData]);
+
+      /**
+       * Call the chart-specific draw function with the SVG element and the data:
+       */
+
+      self.draw(svg, tidyData);
     });
   };
 

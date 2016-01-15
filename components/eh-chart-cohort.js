@@ -23,16 +23,10 @@ class CohortChart extends EHChart {
     this.measures = ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5'];
   };
 
-  draw(node, data) {
-    if (!Array.isArray(data)) {
-      return;
-    }
-
+  draw(svg, data) {
     let self = this;
-    // Select the svg element, if it exists.
-    var svg = d3.select(node).selectAll('svg').data([data]);
 
-    // Otherwise, create the skeletal chart.
+    // Create the skeletal chart.
     var gEnter = svg.enter().append('svg').append('g');
 
     // Update the outer dimensions.
