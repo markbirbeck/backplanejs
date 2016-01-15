@@ -9,14 +9,6 @@ class TimeSeriesChart extends EHChart {
     super(margin);
   };
 
-  chart(selection) {
-    let self = this;
-
-    selection.each(function (data) {
-      self.draw(this, data);
-    });
-  };
-
   draw(node, data) {
     if (!Array.isArray(data)) {
       return;

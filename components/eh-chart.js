@@ -20,6 +20,14 @@ class EHChart {
     this.line = d3.svg.line().x(this.X.bind(this)).y(this.Y.bind(this));
   };
 
+  chart(selection) {
+    let self = this;
+
+    selection.each(function (data) {
+      self.draw(this, data);
+    });
+  };
+
   setX(x) {
     this.x = x;
     return this;
