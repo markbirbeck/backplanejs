@@ -7,7 +7,6 @@ let d3 = require('d3');
 
 class TimeSeriesChart extends EHChart {
   constructor(margin) {
-    margin = margin || {top: 20, right: 20, bottom: 20, left: 20};
     super(margin);
   };
 
@@ -19,32 +18,25 @@ class TimeSeriesChart extends EHChart {
     });
   };
 
-  x(_) {
-    if (!arguments.length) return xValue;
-    xValue = _;
-    return this;
-  };
-
-  y(_) {
-    if (!arguments.length) return yValue;
-    yValue = _;
-    return this;
-  };
-
   draw(node, data) {
+    if (!Array.isArray(data)) {
+      return;
+    }
+
+    let self = this;
     // Convert data to standard representation greedily;
     // this is needed for nondeterministic accessors.
     data = data.map(function(d, i) {
-      return [xValue.call(data, d, i), yValue.call(data, d, i)];
+      return [self.x.call(data, d, i), self.y.call(data, d, i)];
     });
 
     // Update the x-scale.
-    xScale
+    this.xScale
         .domain(d3.extent(data, function(d) { return d[0]; }))
         .range([0, this.width - this.margin.left - this.margin.right]);
 
     // Update the y-scale.
-    yScale
+    this.yScale
         .domain([0, d3.max(data, function(d) { return d[1]; })])
         .range([this.height - this.margin.top - this.margin.bottom, 0]);
 
@@ -67,26 +59,16 @@ class TimeSeriesChart extends EHChart {
 
     // Update the area path.
     g.select('.area')
-        .attr('d', area.y0(yScale.range()[0]));
+        .attr('d', this.area.y0(this.yScale.range()[0]));
 
     // Update the line path.
     g.select('.line')
-        .attr('d', line);
+        .attr('d', this.line);
 
     // Update the x-axis.
     g.select('.x.axis')
-        .attr('transform', 'translate(0,' + yScale.range()[0] + ')')
-        .call(xAxis);
-  }
-
-  // The x-accessor for the path generator; xScale ∘ xValue.
-  static X(d) {
-    return xScale(d[0]);
-  }
-
-  // The x-accessor for the path generator; yScale ∘ yValue.
-  static Y(d) {
-    return yScale(d[1]);
+        .attr('transform', 'translate(0,' + this.yScale.range()[0] + ')')
+        .call(this.xAxis.bind(this));
   }
 }
 
@@ -130,13 +112,12 @@ class ChartTimeSeries extends ChartControl {
 
   initChart() {
     let timeSeries = new TimeSeriesChart();
+    var formatDate = d3.time.format('%b %Y');
 
     timeSeries
-      .x(function(d) { return formatDate.parse(d.date); })
-      .y(function(d) { return +d.price; });
+      .setX(function(d) { return formatDate.parse(d.date); })
+      .setY(function(d) { return +d.price; });
     this.$chart = timeSeries;
-
-    var formatDate = d3.time.format('%b %Y');
   }
 
   refresh(value) {
@@ -145,13 +126,5 @@ class ChartTimeSeries extends ChartControl {
       .call(this.$chart.chart.bind(this.$chart));
   };
 };
-
-var xValue = function(d) { return d[0]; },
-    yValue = function(d) { return d[1]; },
-    xScale = d3.time.scale(),
-    yScale = d3.scale.linear(),
-    xAxis = d3.svg.axis().scale(xScale).orient('bottom').tickSize(6, 0),
-    area = d3.svg.area().x(TimeSeriesChart.X).y1(TimeSeriesChart.Y),
-    line = d3.svg.line().x(TimeSeriesChart.X).y(TimeSeriesChart.Y);
 
 module.exports = ChartTimeSeries;
