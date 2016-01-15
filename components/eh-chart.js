@@ -8,9 +8,9 @@ class EHChart {
      */
 
     margin = margin || {top: 20, right: 20, bottom: 20, left: 20};
-    this._margin = margin;
-    this._width = 760;
-    this._height = 120;
+    this.margin = margin;
+    this.width = 760;
+    this.height = 120;
     this.x = function(d) { return d[0]; };
     this.y = function(d) { return d[1]; };
     this.xScale = d3.time.scale();
