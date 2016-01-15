@@ -47,12 +47,6 @@ class ChartTimeSeries extends ChartControl {
       .setY(function(d) { return +d.price; });
     this.$chart = timeSeries;
   }
-
-  refresh(value) {
-    d3.select(this.$value)
-      .datum(value)
-      .call(this.$chart.chart.bind(this.$chart));
-  };
 };
 
 module.exports = ChartTimeSeries;

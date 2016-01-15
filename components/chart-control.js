@@ -16,6 +16,12 @@ class ChartControl extends BackplaneControl {
       </div>
     `;
   }
+
+  refresh(value) {
+    d3.select(this.$value)
+      .datum(value)
+      .call(this.$chart.chart.bind(this.$chart));
+  };
 }
 
 module.exports = ChartControl;
