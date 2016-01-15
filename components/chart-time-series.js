@@ -6,48 +6,30 @@ let EHChart = require('./eh-chart');
 let d3 = require('d3');
 
 class TimeSeriesChart extends EHChart {
-  constructor () {
-    super();
+  constructor(margin) {
+    margin = margin || {top: 20, right: 20, bottom: 20, left: 20};
+    super(margin);
+  };
+
+  chart(selection) {
     let self = this;
 
-    function chart(selection) {
-      selection.each(function (data) {
-        self.draw(this, data);
-      });
-    };
+    selection.each(function (data) {
+      self.draw(this, data);
+    });
+  };
 
-    chart.margin = function(_) {
-      if (!arguments.length) return margin;
-      margin = _;
-      return chart;
-    };
+  x(_) {
+    if (!arguments.length) return xValue;
+    xValue = _;
+    return this;
+  };
 
-    chart.width = function(_) {
-      if (!arguments.length) return width;
-      width = _;
-      return chart;
-    };
-
-    chart.height = function(_) {
-      if (!arguments.length) return height;
-      height = _;
-      return chart;
-    };
-
-    chart.x = function(_) {
-      if (!arguments.length) return xValue;
-      xValue = _;
-      return chart;
-    };
-
-    chart.y = function(_) {
-      if (!arguments.length) return yValue;
-      yValue = _;
-      return chart;
-    };
-
-    return chart;
-  }
+  y(_) {
+    if (!arguments.length) return yValue;
+    yValue = _;
+    return this;
+  };
 
   draw(node, data) {
     // Convert data to standard representation greedily;
@@ -59,12 +41,12 @@ class TimeSeriesChart extends EHChart {
     // Update the x-scale.
     xScale
         .domain(d3.extent(data, function(d) { return d[0]; }))
-        .range([0, width - margin.left - margin.right]);
+        .range([0, this.width - this.margin.left - this.margin.right]);
 
     // Update the y-scale.
     yScale
         .domain([0, d3.max(data, function(d) { return d[1]; })])
-        .range([height - margin.top - margin.bottom, 0]);
+        .range([this.height - this.margin.top - this.margin.bottom, 0]);
 
     // Select the svg element, if it exists.
     var svg = d3.select(node).selectAll('svg').data([data]);
@@ -76,12 +58,12 @@ class TimeSeriesChart extends EHChart {
     gEnter.append('g').attr('class', 'x axis');
 
     // Update the outer dimensions.
-    svg .attr('width', width)
-        .attr('height', height);
+    svg .attr('width', this.width)
+        .attr('height', this.height);
 
     // Update the inner dimensions.
     var g = svg.select('g')
-        .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
 
     // Update the area path.
     g.select('.area')
@@ -147,11 +129,12 @@ class ChartTimeSeries extends ChartControl {
   };
 
   initChart() {
-    let chart = new TimeSeriesChart();
+    let timeSeries = new TimeSeriesChart();
 
-    this.$chart = chart
+    timeSeries
       .x(function(d) { return formatDate.parse(d.date); })
       .y(function(d) { return +d.price; });
+    this.$chart = timeSeries;
 
     var formatDate = d3.time.format('%b %Y');
   }
@@ -159,14 +142,11 @@ class ChartTimeSeries extends ChartControl {
   refresh(value) {
     d3.select(this.$value)
       .datum(value)
-      .call(this.$chart);
+      .call(this.$chart.chart.bind(this.$chart));
   };
 };
 
-var margin = {top: 20, right: 20, bottom: 20, left: 20},
-    width = 760,
-    height = 120,
-    xValue = function(d) { return d[0]; },
+var xValue = function(d) { return d[0]; },
     yValue = function(d) { return d[1]; },
     xScale = d3.time.scale(),
     yScale = d3.scale.linear(),
