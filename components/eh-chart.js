@@ -2,8 +2,15 @@
 
 let d3 = require('d3');
 
-class EHChart {
-  constructor(margin) {
+class Chart {
+  constructor(/*title, subtitle, */margin) {
+    // this.plot = new Plot();
+    // this.legend = new Legend();
+
+    // this.chartBackground = new Background();
+
+    // this.title = title;
+    // this.subtitle = subtitle;
 
     /**
      * Set some default values:
@@ -13,13 +20,16 @@ class EHChart {
     this.margin = margin;
     this.width = 760;
     this.height = 120;
-    this.x = function(d) { return d[0]; };
-    this.y = function(d) { return d[1]; };
-    this.xScale = d3.time.scale();
-    this.yScale = d3.scale.linear();
-    this.xAxis = d3.svg.axis().scale(this.xScale).orient('bottom').tickSize(6, 0);
-    this.area = d3.svg.area().x(this.X.bind(this)).y1(this.Y.bind(this));
-    this.line = d3.svg.line().x(this.X.bind(this)).y(this.Y.bind(this));
+    this.normaliseX = function(d) { return d[0]; };
+    this.normaliseY = function(d) { return d[1]; };
+  };
+
+  draw(svg, data) { };
+
+  convertData(data) {
+    // Convert data to standard representation greedily;
+    // this is needed for nondeterministic accessors.
+    return data.map((d, i) => [this.normaliseX(d, i), this.normaliseY(d, i)]);
   };
 
   chart(selection) {
@@ -31,10 +41,10 @@ class EHChart {
       }
 
       /**
-       * If there is a data tidying function then call it:
+       * Provide an opportunity to convert the data, if necessary:
        */
 
-      let tidyData = (self.tidyData) ? self.tidyData(data) : data;
+      let convertedData = self.convertData(data);
 
       /**
        * Select the SVG element, if it exists:
@@ -43,31 +53,31 @@ class EHChart {
       var svg = d3
       .select(this)
       .selectAll('svg')
-      .data([tidyData]);
+      .data([convertedData]);
 
       /**
        * Call the chart-specific draw function with the SVG element and the data:
        */
 
-      self.draw(svg, tidyData);
+      self.draw(svg, convertedData);
     });
   };
 
-  setX(x) {
-    this.x = x;
+  setNormaliseX(xFn) {
+    this.normaliseX = xFn;
     return this;
   };
 
-  setY(y) {
-    this.y = y;
+  setNormaliseY(yFn) {
+    this.normaliseY = yFn;
     return this;
   };
 
-  get x() { return this._x; }
-  set x(x) { this._x = x; }
+  get normaliseX() { return this._normaliseX; }
+  set normaliseX(xFn) { this._normaliseX = xFn; }
 
-  get y() { return this._y; }
-  set y(y) { this._y = y; }
+  get normaliseY() { return this._normaliseY; }
+  set normaliseY(yFn) { this._normaliseY = yFn; }
 
   get margin() { return this._margin; }
   set margin(m) {
@@ -86,6 +96,125 @@ class EHChart {
     this._width = m;
     return this;
   }
+};
+
+class Background {
+
+};
+
+class Plot {
+  constructor() {
+    this.plotBackground = new Background();
+  };
+};
+
+class LegendItem {
+  constructor() {
+    this.legendItem = [];
+  };
+};
+
+class Legend {
+  constructor() {
+    this.legendItem = [];
+  };
+};
+
+class NonAxisChart extends Chart {
+  constructor() {
+    this.sectionLabel = [];
+    this.exploded = [];
+  }
+};
+
+class MajorTick {
+  constructor(label) {
+    this.label = label;
+  }
+};
+
+class MinorTick {
+
+};
+
+class Axis {
+  constructor(/*title, */scale, orientation, tickSize) {
+    // this.title = title;
+
+    return d3.svg.axis()
+    .scale(scale)
+    .orient(orientation)
+    .tickSize(tickSize[0], tickSize[1]);
+  };
+};
+
+class RangeAxis extends Axis {
+
+};
+
+class DomainAxis extends Axis {
+
+};
+
+class AxisChart extends Chart {
+  constructor() {
+    super();
+
+    /**
+     * Default to linear axis for x and y:
+     */
+
+    this.xScale = d3.scale.linear();
+    this.yScale = d3.scale.linear();
+
+    // this.domainAxis = new DomainAxis();
+    // this.rangeAxis = new RangeAxis();
+    this.origin = [0, 0];
+  }
+
+  draw(svg, data) {
+    super.draw();
+    let self = this;
+
+    // Update the x-scale.
+    this.xScale
+        .domain(d3.extent(data, function(d) { return d[0]; }))
+        .range([0, this.width - this.margin.left - this.margin.right]);
+
+    // Update the y-scale.
+    this.yScale
+        .domain([0, d3.max(data, function(d) { return d[1]; })])
+        .range([this.height - this.margin.top - this.margin.bottom, 0]);
+
+    var gEnter = svg.enter().append('svg').append('g');
+    this.gEnter = gEnter;
+
+    this.setDomainAxis(gEnter);
+
+    // Update the outer dimensions.
+    svg.attr('width', this.width)
+        .attr('height', this.height);
+
+    // Update the inner dimensions.
+    var g = svg.select('g')
+        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+
+    this.refreshDomainAxis(g);
+  }
+
+  setDomainAxis(node) {
+    node.append('g')
+    .attr('class', 'domain-axis');
+  };
+
+  refreshDomainAxis(node) {
+    let xAxis = new Axis(this.xScale, 'bottom', [6, 0]);
+
+    // Update the domain-axis.
+    node.select('.domain-axis')
+    .attr('transform', 'translate(0,' + this.yScale.range()[0] + ')')
+    .call(xAxis.bind(this));
+  };
 
   /**
    * Used by path generators:
@@ -102,12 +231,51 @@ class EHChart {
 
   get xAxis() { return this._xAxis; }
   set xAxis(xAxis) { this._xAxis = xAxis; }
-
-  get area() { return this._area; }
-  set area(area) { this._area = area; }
-
-  get line() { return this._line; }
-  set line(line) { this._line = line; }
 };
 
-module.exports = EHChart;
+class LineChart extends AxisChart {
+  constructor() {
+    super();
+
+    this.line = d3.svg.line().x(this.X.bind(this)).y(this.Y.bind(this));
+  }
+
+  draw(svg, data) {
+    super.draw(svg, data);
+
+    this.gEnter.append('path').attr('class', 'line');
+
+    // Update the line path.
+    svg
+    .select('g')
+    .select('.line')
+      .attr('d', this.line);
+  }
+};
+
+class AreaChart extends LineChart {
+  constructor() {
+    super();
+
+    this.area = d3.svg.area().x(this.X.bind(this)).y1(this.Y.bind(this));
+  }
+
+  draw(svg, data) {
+    super.draw(svg, data);
+
+    // var gEnter = svg.enter().append('svg').append('g');
+    this.gEnter.append('path').attr('class', 'area');
+
+    // Update the area path.
+    svg
+    .select('g')
+    .select('.area')
+      .attr('d', this.area.y0(this.yScale.range()[0]));
+  }
+};
+
+module.exports = {
+  AxisChart,
+  LineChart,
+  AreaChart
+};
