@@ -43,8 +43,8 @@ class ChartTimeSeries extends ChartControl {
     var formatDate = d3.time.format('%b %Y');
 
     timeSeries
-      .setX(function(d) { return formatDate.parse(d.date); })
-      .setY(function(d) { return +d.price; });
+      .setNormaliseX(function(d) { return formatDate.parse(d.date); })
+      .setNormaliseY(function(d) { return +d.price; });
     this.$chart = timeSeries;
   }
 };
