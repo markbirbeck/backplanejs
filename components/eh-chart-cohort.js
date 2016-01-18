@@ -4,7 +4,7 @@ let EHChart = require('./eh-chart');
 
 let d3 = require('d3');
 
-class CohortChart extends EHChart {
+class CohortChart extends EHChart.Chart {
   constructor(key1Name, key2Name, valueName) {
     super({ top: 50, right: 0, bottom: 100, left: 30 });
     this.width = 960 - this.margin.left - this.margin.right;
@@ -23,20 +23,26 @@ class CohortChart extends EHChart {
     this.measures = ['Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5'];
   };
 
-  draw(svg, data) {
-    let self = this;
+  /**
+   * The base class function is expecting an array of arrays, so keep our
+   * objects intact:
+   */
 
-    // Create the skeletal chart.
-    var gEnter = svg.enter().append('svg').append('g');
+  convertData(data) {
+    return data;
+  };
+
+  draw(svg, data) {
+    super.draw(svg, data);
+
+    let self = this;
 
     // Update the outer dimensions.
     svg
     .attr('width', self.width + self.margin.left + self.margin.right)
     .attr('height', self.height + self.margin.top + self.margin.bottom);
 
-    // Update the inner dimensions.
-    var g = svg.select('g')
-        .attr('transform', 'translate(' + self.margin.left + ',' + self.margin.top + ')');
+    var g = svg.select('g');
 
     g.selectAll('.measureLabel')
         .data(self.measures)
