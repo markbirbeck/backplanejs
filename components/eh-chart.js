@@ -24,7 +24,18 @@ class Chart {
     this.normaliseY = function(d) { return d[1]; };
   };
 
-  draw(svg, data) { };
+  draw(svg, data) {
+    this.gEnter = svg.enter().append('svg').append('g');
+
+    // Update the outer dimensions.
+    svg
+    .attr('width', this.width)
+    .attr('height', this.height);
+
+    // Update the inner dimensions.
+    svg.select('g')
+    .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+  };
 
   convertData(data) {
     // Convert data to standard representation greedily;
@@ -173,7 +184,7 @@ class AxisChart extends Chart {
   }
 
   draw(svg, data) {
-    super.draw();
+    super.draw(svg, data);
     let self = this;
 
     // Update the x-scale.
@@ -186,14 +197,7 @@ class AxisChart extends Chart {
         .domain([0, d3.max(data, function(d) { return d[1]; })])
         .range([this.height - this.margin.top - this.margin.bottom, 0]);
 
-    var gEnter = svg.enter().append('svg').append('g');
-    this.gEnter = gEnter;
-
-    this.setDomainAxis(gEnter);
-
-    // Update the outer dimensions.
-    svg.attr('width', this.width)
-        .attr('height', this.height);
+    this.setDomainAxis(this.gEnter);
 
     // Update the inner dimensions.
     var g = svg.select('g')
@@ -275,6 +279,7 @@ class AreaChart extends LineChart {
 };
 
 module.exports = {
+  Chart,
   AxisChart,
   LineChart,
   AreaChart
