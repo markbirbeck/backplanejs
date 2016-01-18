@@ -65,9 +65,7 @@ class CohortChart extends EHChart {
     var cards = g.selectAll('.hour')
         .data(data, function(d) {return d[self.key1Name]+':'+d[self.key2Name];});
 
-    cards.append('title');
-
-    cards.enter().append('rect')
+    let cardsEnter = cards.enter().append('rect')
         .attr('x', function(d) { return (d[self.key2Name] - 1) * self.gridSize; })
         .attr('y', function(d) { return (d[self.key1Name] - 1) * self.gridSize; })
         .attr('rx', 4)
@@ -76,6 +74,8 @@ class CohortChart extends EHChart {
         .attr('width', self.gridSize)
         .attr('height', self.gridSize)
         .style('fill', self.colors[0]);
+
+    cardsEnter.append('title');
 
     cards.transition().duration(1000)
         .style('fill', function(d) { return colorScale(d[self.valueName]); });
