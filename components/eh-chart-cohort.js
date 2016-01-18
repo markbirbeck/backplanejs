@@ -87,17 +87,17 @@ class CohortChart extends EHChart {
     var legend = g.selectAll('.legend')
         .data([0].concat(colorScale.quantiles()), function(d) { return d; });
 
-    legend.enter().append('g')
+    let legendEnter = legend.enter().append('g')
         .attr('class', 'legend');
 
-    legend.append('rect')
+    legendEnter.append('rect')
       .attr('x', function(d, i) { return self.legendElementWidth * i; })
       .attr('y', self.height)
       .attr('width', self.legendElementWidth)
       .attr('height', self.gridSize / 2)
       .style('fill', function(d, i) { return self.colors[i]; });
 
-    legend.append('text')
+    legendEnter.append('text')
       .attr('class', 'mono')
       .text(function(d) { return '≥ ' + Math.round(d); })
       .attr('x', function(d, i) { return self.legendElementWidth * i; })
