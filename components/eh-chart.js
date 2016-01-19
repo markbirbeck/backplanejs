@@ -47,7 +47,7 @@ class Chart {
     let self = this;
 
     selection.each(function (data) {
-      if (!Array.isArray(data)) {
+      if (data === '' || data === {}) {
         return;
       }
 
