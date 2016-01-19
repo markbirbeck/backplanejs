@@ -14,8 +14,10 @@ class CohortChart extends EHChart.Chart {
     this.key2Name = key2Name;
     this.valueName = valueName;
 
-    this.gridSize = Math.floor(this.width / 18);
-    this.legendElementWidth = this.gridSize * 2;
+    this.gridSizeUnit = Math.floor(this.width / 18);
+    this.gridSizeX = this.gridSizeUnit * 2;
+    this.gridSizeY = this.gridSizeUnit;
+    this.legendElementWidth = this.gridSizeUnit;
 
     this.buckets = 9;
     this.colors = ['#ffffd9','#edf8b1','#c7e9b4','#7fcdbb','#41b6c4','#1d91c0','#225ea8','#253494','#081d58']; // alternatively colorbrewer.YlGnBu[9]
@@ -48,10 +50,10 @@ class CohortChart extends EHChart.Chart {
         .data(self.measures)
         .enter().append('text')
           .text(function(d) { return d; })
-          .attr('x', function(d, i) { return i * self.gridSize; })
+          .attr('x', function(d, i) { return i * self.gridSizeX; })
           .attr('y', 0)
           .style('text-anchor', 'middle')
-          .attr('transform', 'translate(' + self.gridSize / 2 + ', -6)')
+          .attr('transform', 'translate(' + self.gridSizeX / 2 + ', -6)')
           .attr('class', 'measureLabel mono axis');
 
     g.selectAll('.cohortLabel')
@@ -59,9 +61,9 @@ class CohortChart extends EHChart.Chart {
         .enter().append('text')
           .text(function (d) { return d; })
           .attr('x', 0)
-          .attr('y', function (d, i) { return i * self.gridSize; })
+          .attr('y', function (d, i) { return i * self.gridSizeY; })
           .style('text-anchor', 'end')
-          .attr('transform', 'translate(-6,' + self.gridSize / 1.5 + ')')
+          .attr('transform', 'translate(-6,' + self.gridSizeY / 1.5 + ')')
           .attr('class', 'cohortLabel mono axis');
 
     var colorScale = d3.scale.quantile()
@@ -72,13 +74,13 @@ class CohortChart extends EHChart.Chart {
         .data(data, function(d) {return d[self.key1Name]+':'+d[self.key2Name];});
 
     let cardsEnter = cards.enter().append('rect')
-        .attr('x', function(d) { return (d[self.key2Name] - 1) * self.gridSize; })
-        .attr('y', function(d) { return (d[self.key1Name] - 1) * self.gridSize; })
+        .attr('x', function(d) { return (d[self.key2Name] - 1) * self.gridSizeX; })
+        .attr('y', function(d) { return (d[self.key1Name] - 1) * self.gridSizeY; })
         .attr('rx', 4)
         .attr('ry', 4)
         .attr('class', 'hour bordered')
-        .attr('width', self.gridSize)
-        .attr('height', self.gridSize)
+        .attr('width', self.gridSizeX)
+        .attr('height', self.gridSizeY)
         .style('fill', self.colors[0]);
 
     cardsEnter.append('title');
@@ -100,14 +102,14 @@ class CohortChart extends EHChart.Chart {
       .attr('x', function(d, i) { return self.legendElementWidth * i; })
       .attr('y', self.height)
       .attr('width', self.legendElementWidth)
-      .attr('height', self.gridSize / 2)
+      .attr('height', self.gridSizeY / 2)
       .style('fill', function(d, i) { return self.colors[i]; });
 
     legendEnter.append('text')
       .attr('class', 'mono')
       .text(function(d) { return '≥ ' + Math.round(d); })
       .attr('x', function(d, i) { return self.legendElementWidth * i; })
-      .attr('y', self.height + self.gridSize);
+      .attr('y', self.height + self.gridSizeY);
 
     legend.exit().remove();
   }
