@@ -6,7 +6,7 @@ let d3 = require('d3');
 
 class CohortChart extends EHChart.Chart {
   constructor(key1Name, key2Name, valueName) {
-    super({ top: 50, right: 0, bottom: 100, left: 30 });
+    super({ top: 50, right: 0, bottom: 100, left: 120 });
     this.width = 960 - this.margin.left - this.margin.right;
     this.height = 430 - this.margin.top - this.margin.bottom;
 
@@ -34,7 +34,9 @@ class CohortChart extends EHChart.Chart {
     return data;
   };
 
-  draw(svg, data) {
+  draw(svg, source) {
+    let data = source.buckets;
+    let monthsList = source.monthsList;
     super.draw(svg, data);
 
     let self = this;
@@ -57,7 +59,7 @@ class CohortChart extends EHChart.Chart {
           .attr('class', 'measureLabel mono axis');
 
     g.selectAll('.cohortLabel')
-        .data(self.cohorts)
+        .data(monthsList)
         .enter().append('text')
           .text(function (d) { return d; })
           .attr('x', 0)
