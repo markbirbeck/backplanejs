@@ -17,7 +17,7 @@ class ChartCohort extends ChartControl {
         text.mono {
           font-size: 9pt;
           font-family: Consolas, courier;
-          fill: #aaa;
+          fill: black;
         }
       </style>
     `;
