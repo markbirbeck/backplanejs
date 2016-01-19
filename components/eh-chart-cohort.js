@@ -76,16 +76,24 @@ class CohortChart extends EHChart.Chart {
     let cardsEnter = cards.enter().append('rect')
         .attr('x', function(d) { return (d[self.key2Name] - 1) * self.gridSizeX; })
         .attr('y', function(d) { return (d[self.key1Name] - 1) * self.gridSizeY; })
-        .attr('rx', 4)
-        .attr('ry', 4)
         .attr('class', 'hour bordered')
         .attr('width', self.gridSizeX)
         .attr('height', self.gridSizeY)
         .style('fill', self.colors[0]);
 
+    cards.enter().append('text')
+        .text(function (d) { return d[self.valueName]; })
+        .attr('x', function(d) { return (d[self.key2Name] - 1) * self.gridSizeX; })
+        .attr('y', function(d) { return (d[self.key1Name] - 1) * self.gridSizeY; })
+        .attr('rx', 4)
+        .attr('ry', 4)
+        .style('text-anchor', 'middle')
+        .attr('transform', 'translate(' + self.gridSizeX / 2 + ', ' + self.gridSizeY / 1.5 + ')')
+        .attr('class', 'cardLabel mono');
+
     cardsEnter.append('title');
 
-    cards.transition().duration(1000)
+    cardsEnter.transition().duration(1000)
         .style('fill', function(d) { return colorScale(d[self.valueName]); });
 
     cards.select('title').text(function(d) { return d[self.valueName]; });
