@@ -6,5 +6,6 @@ module.exports = {
   chartCohort: require('./components/chart-cohort'),
   chartControl: require('./components/chart-control'),
   chartTimeSeries: require('./components/chart-time-series'),
+  plotTimeSeries: require('./components/plot-time-series'),
   xformsOutput: require('./components/xforms-output'),
 };
