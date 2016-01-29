@@ -2,8 +2,6 @@
 
 let BackplaneControl = require('./backplane-control');
 
-let d3 = require('d3');
-
 let tidyData = (data /*, keyName, valueName */) => {
   console.log('In tidyData:', data);
   return [

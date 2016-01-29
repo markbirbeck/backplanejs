@@ -15,7 +15,6 @@
   "bugs": "https://github.com/markbirbeck/backplanejs/issues",
   "homepage": "https://github.com/markbirbeck/backplanejs",
   "dependencies": {
-    "d3": "^3.5.12",
     "webcomponents.js": "^0.7.18"
   },
   "devDependencies": {

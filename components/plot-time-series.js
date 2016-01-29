@@ -1,7 +1,7 @@
 'use strict';
 
 let ChartControl = require('./chart-control');
-let TimeSeriesPlot = require('./eh-plot-time-series');
+let TimeSeriesPlot = require('eh-charts').plotTimeSeries;
 
 class PlotTimeSeries extends ChartControl {
   name() { return 'PlotTimeSeries'; }
@@ -40,10 +40,9 @@ class PlotTimeSeries extends ChartControl {
 
   initChart() {
     let timeSeries = new TimeSeriesPlot();
-    var formatDate = d3.time.format('%b %Y');
 
     timeSeries
-      .setNormaliseX(function(d) { return formatDate.parse(d.date); })
+      .setNormaliseXTimeFormat('%b %Y')
       .setNormaliseY(function(d) { return +d.price; });
     this.$chart = timeSeries;
   }

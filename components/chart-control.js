@@ -18,9 +18,7 @@ class ChartControl extends BackplaneControl {
   }
 
   refresh(value) {
-    d3.select(this.$value)
-      .datum(value)
-      .call(this.$chart.chart.bind(this.$chart));
+    this.$chart.refresh(this.$value, value);
   };
 }
 
