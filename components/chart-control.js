@@ -11,9 +11,19 @@ class ChartControl extends BackplaneControl {
 
   markup() {
     return `
-      <div class='container'>
-        <div class='value'></div>
-      </div>
+      <style>
+        :host {
+          display: inline-block;
+        }
+        :host .container,
+        :host .value {
+          height: 100%;
+          width: 100%;
+        }
+      </style>
+      <span class='container'>
+        <span class='value'></span>
+      </span>
     `;
   }
 
