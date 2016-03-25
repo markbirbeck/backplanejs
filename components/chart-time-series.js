@@ -1,7 +1,7 @@
 'use strict';
 
 let ChartControl = require('./chart-control');
-let TimeSeriesChart = require('eh-charts').timeSeries;
+let TimeSeriesChart = require('fotochrom').timeSeries;
 
 class ChartTimeSeries extends ChartControl {
   name() { return 'ChartTimeSeries'; }

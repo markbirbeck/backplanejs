@@ -1,7 +1,7 @@
 'use strict';
 
 let ChartControl = require('./chart-control');
-let CohortChart = require('eh-charts').cohort;
+let CohortChart = require('fotochrom').cohort;
 
 class ChartCohort extends ChartControl {
   name() { return 'ChartCohort'; }

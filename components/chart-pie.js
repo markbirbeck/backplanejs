@@ -1,7 +1,7 @@
 'use strict';
 
 let ChartControl = require('./chart-control');
-let PieChart = require('eh-charts').pie;
+let PieChart = require('fotochrom').pie;
 
 class ChartPie extends ChartControl {
   name() { return 'ChartPie'; }

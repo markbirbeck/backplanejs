@@ -1,7 +1,7 @@
 'use strict';
 
 let ChartControl = require('./chart-control');
-let GeoChart = require('eh-charts').geo;
+let GeoChart = require('fotochrom').geo;
 
 class ChartGeo extends ChartControl {
   name() { return 'ChartGeo'; }
