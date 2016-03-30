@@ -9,10 +9,6 @@ class PlotTimeSeries extends ChartControl {
   style() {
     return `
       <style>
-        svg {
-          font: 10px sans-serif;
-        }
-
         .axis path, .axis line {
           fill: none;
           stroke: #000;

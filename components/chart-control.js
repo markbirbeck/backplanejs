@@ -20,6 +20,9 @@ class ChartControl extends BackplaneControl {
           height: 100%;
           width: 100%;
         }
+        svg {
+          font: 10px sans-serif;
+        }
       </style>
       <span class='container'>
         <span class='value'></span>
