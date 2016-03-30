@@ -7,6 +7,7 @@ module.exports = {
   chartControl: require('./components/chart-control'),
   chartGeo: require('./components/chart-geo'),
   chartPie: require('./components/chart-pie'),
+  chartScatter: require('./components/chart-scatter'),
   chartTimeSeries: require('./components/chart-time-series'),
   plotTimeSeries: require('./components/plot-time-series'),
   xformsOutput: require('./components/xforms-output'),
