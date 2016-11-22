@@ -28,7 +28,7 @@ class BackplaneControl extends HTMLElement {
       let node = this.shadowRoot.querySelector('.' + name);
 
       if (!node) {
-        console.error(`An element with a class of '${name}' has not defined in custom control '${this.name()}'`);
+        console.error(`An element with a class of '${name}' has not been defined in custom control '${this.name()}'`);
       } else {
         this['$' + name] = node;
       }
