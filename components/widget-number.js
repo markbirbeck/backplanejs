@@ -1,6 +1,7 @@
 'use strict';
 
 let BackplaneControl = require('./backplane-control');
+const numeral = require('numeral');
 
 
 class WidgetNumber extends BackplaneControl {
@@ -116,7 +117,9 @@ class WidgetNumber extends BackplaneControl {
   };
 
   refresh(data) {
-    this.$value.refresh(data.value);
+    let value = numeral(data.value).format('0,0[.]0a');
+
+    this.$value.refresh(value);
     if (data.text && this.$text) {
       this.$text.refresh(data.text);
     }
