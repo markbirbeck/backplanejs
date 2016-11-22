@@ -16,13 +16,13 @@
   "homepage": "https://github.com/markbirbeck/backplanejs",
   "dependencies": {
     "fotochrom": "markbirbeck/fotochrom",
+    "numeral": "^1.5.5",
     "webcomponents.js": "^0.7.18"
   },
   "devDependencies": {
     "chai": "^3.4.1",
     "chai-as-promised": "^5.1.0",
     "mocha": "^2.3.4",
-    "numeral": "^1.5.5",
     "webdriver-mocha": "^0.2.2"
   }
 }
