@@ -1,0 +1,26 @@
+<link rel="import" href="../../polymer/polymer.html">
+
+<dom-module id="backplane-output">
+  <template>
+    <div class='container'>
+      <div id='value'></div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'backplane-output',
+
+      properties: {
+      },
+
+      refresh: function(val) {
+        let value = this.$.value;
+
+        value.textContent = val;
+      }
+
+    });
+  </script>
+</dom-module>
