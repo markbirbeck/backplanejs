@@ -15,7 +15,7 @@
   "bugs": "https://github.com/markbirbeck/backplanejs/issues",
   "homepage": "https://github.com/markbirbeck/backplanejs",
   "dependencies": {
-    "fotochrom": "^0.3.0",
+    "fotochrom": "^0.4.1",
     "numeral": "^1.5.5",
     "webcomponents.js": "^0.7.18"
   },
