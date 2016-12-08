@@ -53,6 +53,7 @@
       is: 'plot-time-series',
 
       properties: {
+        timeFormat: String
       },
 
       refresh: function(value) {
@@ -65,7 +66,7 @@
         // var formatDate = d3.time.format('%b %Y');
 
         chart
-          .setNormaliseXTimeFormat('%b %Y')
+          .setNormaliseXTimeFormat(this.timeFormat)
           .setNormaliseY(function(d) { return +d.price; });
         this._chart = chart;
       }
