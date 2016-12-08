@@ -1,0 +1,27 @@
+<link rel="import" href="../../polymer/polymer.html">
+
+<link rel="import" href="./backplane-output.html">
+
+<dom-module id="xforms-output">
+  <template>
+    <div class="container">
+      <backplane-output id='value'></backplane-output>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+
+      is: 'xforms-output',
+
+      properties: {
+      },
+
+      refresh: function(val) {
+        let value = this.$.value;
+
+        value.refresh(val);
+      }
+    });
+  </script>
+</dom-module>
