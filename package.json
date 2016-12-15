@@ -20,6 +20,7 @@
     "webcomponents.js": "^0.7.18"
   },
   "devDependencies": {
+    "bower": "^1.8.0",
     "chai": "^3.4.1",
     "chai-as-promised": "^5.1.0",
     "mocha": "^2.3.4",
