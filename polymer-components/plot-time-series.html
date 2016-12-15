@@ -60,7 +60,7 @@
         this._chart.refresh(this.$.value, value);
       },
 
-      created: function() {
+      ready: function() {
         let fotochrom = window.fotochrom;
         let chart = new fotochrom.plotTimeSeries();
         // var formatDate = d3.time.format('%b %Y');
